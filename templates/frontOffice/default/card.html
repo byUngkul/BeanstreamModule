@@ -1,0 +1,78 @@
+{form name="beanstreammodule.payment"}
+<form id="form-address" class="form-horizontal" method="post" action="{url path="/beanstream/payment"}">
+        <fieldset id="register-info" class="panel">
+            <div class="panel-heading">
+                {intl l="Credit card information" d="beanstreammodule"}
+            </div>
+            <div class="panel-body">
+            {form_hidden_fields form=$form}
+            {form_field form=$form field='card_name'}
+                <div class="form-group {if $error} has-error{/if}">
+                    <label class="control-label" for="{$label_attr.for}">{$label}{if $required} <span class="required">*</span>{/if}</label>
+                    <div class="control-input">
+                        <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" placeholder="{$label}" {if $required} aria-required="true" required{/if}/>
+                        {if $error }
+                            <span class="help-block">{$message}</span>
+                            {assign var="error_focus" value="true"}
+                        {/if}
+                    </div>
+                </div>
+            {/form_field}
+            {form_field form=$form field='card_number'}
+                <div class="form-group {if $error} has-error{/if}">
+                    <label class="control-label" for="{$label_attr.for}">{$label}{if $required} <span class="required">*</span>{/if}</label>
+                    <div class="control-input">
+                        <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" placeholder="{$label}" {if $required} aria-required="true" required{/if}/>
+                        {if $error }
+                            <span class="help-block">{$message}</span>
+                            {assign var="error_focus" value="true"}
+                        {/if}
+                    </div>
+                </div>
+            {/form_field}
+            <div class="form-group {if $error} has-error{/if}">
+                <label class="control-label" for="expire-date">{intl l="expiration date" d="beanstreammodule"}{if $required} <span class="required">*</span>{/if}</label>
+                <div class="control-input">
+                    <div class="col-xs-4">
+                    {form_field form=$form field='expiration_date_month'}
+                        <select id="expire-date" class="form-control" name="{$name}">
+                            <option value="">{intl l="Month" d="beanstreammodule"}</option>
+                            {foreach $choices as $choice}
+                                <option value="{$choice->value}" >{$choice->label}</option>
+                            {/foreach}
+                        </select>
+                    {/form_field}
+                    </div>
+                    <div class="col-xs-4">
+                    {form_field form=$form field='expiration_date_year'}
+                        <select class="form-control" name="{$name}">
+                            <option value="">{intl l="Year" d="beanstreammodule"}</option>
+                            {foreach $choices as $choice}
+                                <option value="{$choice->value}" >{$choice->label}</option>
+                            {/foreach}
+                        </select>
+                    {/form_field}
+                    </div>
+                </div>
+            </div>
+            {form_field form=$form field='card_cvv'}
+                <div class="form-group {if $error} has-error{/if}">
+                    <label class="control-label" for="{$label_attr.for}">{$label}{if $required} <span class="required">*</span>{/if}</label>
+                    <div class="control-input">
+                        <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" placeholder="{$label}" {if $required} aria-required="true" required{/if}/>
+                        {if $error }
+                            <span class="help-block">{$message}</span>
+                            {assign var="error_focus" value="true"}
+                        {/if}
+                    </div>
+                </div>
+            {/form_field}
+            <div class="form-group group-btn">
+                <div class="control-btn">
+                    <button type="submit" class="btn btn-register">{intl l="Pay" d="beansteammodule"}</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</form>
+{/form}
