@@ -47,14 +47,19 @@ class BeanstreamModuleConfigForm extends BaseForm
 
         $this->addMerchantIdField($translationKeys, $fieldsIdKeys);
         $this->addPasscodeField($translationKeys, $fieldsIdKeys);
+        $this->addMinAmountField($translationKeys, $fieldsIdKeys);
+        $this->addMaxAmountField($translationKeys, $fieldsIdKeys);
     }
 
     protected function addMerchantIdField(array $translationKeys, array $fieldsIdKeys)
     {
         $this->formBuilder
             ->add("merchant_id", "text", array(
-                "label" => $this->translator->trans($this->readKey("merchant_id", $translationKeys), [], BeanstreamModule::MESSAGE_DOMAIN),
-                "label_attr" => ["for" => $this->readKey("merchant_id", $fieldsIdKeys)],
+                "label" => $this->readKey("merchant_id", $translationKeys),
+                "label_attr" => [
+                    "for" => $this->readKey("merchant_id", $fieldsIdKeys),
+                    "help" => $this->readKey("help.merchant_id", $translationKeys)
+                ],
                 "required" => true,
                 "constraints" => array(
                     new NotBlank(),
@@ -68,13 +73,52 @@ class BeanstreamModuleConfigForm extends BaseForm
     {
         $this->formBuilder
             ->add("passcode", "text", array(
-                "label" => $this->translator->trans($this->readKey("passcode", $translationKeys), [], BeanstreamModule::MESSAGE_DOMAIN),
-                "label_attr" => ["for" => $this->readKey("passcode", $fieldsIdKeys)],
+                "label" => $this->readKey("passcode", $translationKeys),
+                "label_attr" => [
+                    "for" => $this->readKey("passcode", $fieldsIdKeys),
+                    "help" => $this->readKey("help.passcode", $translationKeys)
+                ],
                 "required" => true,
                 "constraints" => array(
                     new NotBlank(),
                 ),
                 "data" => BeanstreamModule::getConfigValue(BeanstreamModuleConfigValue::PASSCODE),
+            ))
+        ;
+    }
+
+    protected function addMinAmountField(array $translationKeys, array $fieldsIdKeys)
+    {
+        $this->formBuilder
+            ->add("min_amount", "number", array(
+                "label" => $this->readKey("min_amount", $translationKeys),
+                "label_attr" => [
+                    "for" => $this->readKey("min_amount", $fieldsIdKeys),
+                    "help" => $this->readKey("help.min_amount", $translationKeys)
+                ],
+                "required" => true,
+                "constraints" => array(
+                    new NotBlank(),
+                ),
+                "data" => BeanstreamModule::getConfigValue(BeanstreamModuleConfigValue::MIN_AMOUNT),
+            ))
+        ;
+    }
+
+    protected function addMaxAmountField(array $translationKeys, array $fieldsIdKeys)
+    {
+        $this->formBuilder
+            ->add("max_amount", "number", array(
+                "label" => $this->readKey("max_amount", $translationKeys),
+                "label_attr" => [
+                    "for" => $this->readKey("max_amount", $fieldsIdKeys),
+                    "help" => $this->readKey("help.max_amount", $translationKeys)
+                ],
+                "required" => true,
+                "constraints" => array(
+                    new NotBlank(),
+                ),
+                "data" => BeanstreamModule::getConfigValue(BeanstreamModuleConfigValue::MAX_AMOUNT),
             ))
         ;
     }
@@ -103,6 +147,8 @@ class BeanstreamModuleConfigForm extends BaseForm
         return array(
             "merchant_id" => "merchant_id",
             "passcode" => "passcode",
+            "min_amount" => "min_amount",
+            "max_amount" => "max_amount",
         );
     }
 }

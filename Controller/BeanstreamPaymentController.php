@@ -13,13 +13,15 @@
 namespace BeanstreamModule\Controller;
 
 use BeanstreamModule\BeanstreamModule;
+use BeanstreamModule\Model\BeanstreamPayment;
 use BeanstreamModule\Model\Config\BeanstreamModuleConfigValue;
 use Symfony\Component\Form\Form;
-use Thelia\Controller\Front\BaseFrontController;
+use Thelia\Core\HttpKernel\Exception\RedirectException;
 use Thelia\Core\Translation\Translator;
 use Thelia\Form\Exception\FormValidationException;
 use Thelia\Model\Order;
 use Thelia\Model\OrderQuery;
+use Thelia\Module\BasePaymentModuleController;
 
 
 /**
@@ -27,7 +29,7 @@ use Thelia\Model\OrderQuery;
  * @package BeanstreamModule\Controller
  * @author Manuel Raynaud <manu@thelia.net>
  */
-class BeanstreamPaymentController extends BaseFrontController
+class BeanstreamPaymentController extends BasePaymentModuleController
 {
 
     /**
@@ -51,17 +53,16 @@ class BeanstreamPaymentController extends BaseFrontController
             $beanstreamForm = $this->validateForm($form);
 
             $this->doPay($beanstreamForm, $order);
+            $this->redirectToSuccessPage($order->getId());
         } catch (FormValidationException $e) {
             $errorMessage = $e->getMessage();
+        } catch (RedirectException $e) {
+            throw $e;
         } catch (\Exception $e) {
             $errorMessage = $e->getMessage();
         }
 
-        if (null === $errorMessage) {
-
-        } else {
-
-        }
+        $this->redirectToFailurePage($order->getId(), $errorMessage);
     }
 
     private function doPay(Form $form, Order $order)
@@ -69,10 +70,23 @@ class BeanstreamPaymentController extends BaseFrontController
         $payment = $this->callPaymentGateway($form, $order);
 
         if ($payment['status_code'] != '200') {
+            $beanstreamPayment = new BeanstreamPayment();
 
+            $beanstreamPayment
+                ->setOrderId($order->getId())
+                ->setMessageId($payment['response']['code'])
+                ->setMessage($payment['response']['message'])
+                ->save();
+            ;
+
+            throw new \RuntimeException($this->getTranslator()->trans('An error occurred during order process. You can retry.', [], BeanstreamModule::MESSAGE_DOMAIN));
         }
 
+        $response = $payment['response'];
 
+        if ($response['approved'] == 1) {
+            $this->confirmPayment($order->getId());
+        }
     }
 
     /**
@@ -163,5 +177,16 @@ class BeanstreamPaymentController extends BaseFrontController
         ];
 
         return $data;
+    }
+
+    /**
+     * Return a module identifier used to calculate the name of the log file,
+     * and in the log messages.
+     *
+     * @return string the module code
+     */
+    protected function getModuleCode()
+    {
+        return 'BeanstreamModule';
     }
 }

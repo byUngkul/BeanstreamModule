@@ -19,6 +19,8 @@ class BeanstreamModuleConfigForm extends BaseBeanstreamModuleConfigForm
         return array(
             "merchant_id" => "Merchant id",
             "passcode" => "Passcode",
+            "min_amount" => "Minimum amount authorized",
+            "max_amount" => "Maximum amount authorized",
         );
     }
 }

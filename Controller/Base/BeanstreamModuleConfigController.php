@@ -35,6 +35,8 @@ class BeanstreamModuleConfigController extends BaseAdminController
 
             BeanstreamModule::setConfigValue(BeanstreamModuleConfigValue::MERCHANT_ID, is_bool($data["merchant_id"]) ? (int) ($data["merchant_id"]) : $data["merchant_id"]);
             BeanstreamModule::setConfigValue(BeanstreamModuleConfigValue::PASSCODE, is_bool($data["passcode"]) ? (int) ($data["passcode"]) : $data["passcode"]);
+            BeanstreamModule::setConfigValue(BeanstreamModuleConfigValue::MIN_AMOUNT, is_bool($data["min_amount"]) ? (int) ($data["min_amount"]) : $data["min_amount"]);
+            BeanstreamModule::setConfigValue(BeanstreamModuleConfigValue::MAX_AMOUNT, is_bool($data["max_amount"]) ? (int) ($data["max_amount"]) : $data["max_amount"]);
         } catch (FormValidationException $ex) {
             // Invalid data entered
             $errorMessage = $this->createStandardFormValidationErrorMessage($ex);

@@ -12,6 +12,7 @@
 
 namespace BeanstreamModule\Hook;
 
+use BeanstreamModule\Model\BeanstreamPaymentQuery;
 use Thelia\Core\Event\Hook\HookRenderEvent;
 use Thelia\Core\Hook\BaseHook;
 
@@ -22,6 +23,20 @@ use Thelia\Core\Hook\BaseHook;
  */
 class PaymentHook extends BaseHook
 {
+
+    public function showPaymentInfo(HookRenderEvent $event)
+    {
+        $orderId = $event->getArgument('order_id');
+
+        if (null !== $order = BeanstreamPaymentQuery::create()->findOneByOrderId($orderId)) {
+            $event->add($this->render(
+                'order-info.html',
+                [
+                    'order_id' => $orderId
+                ]
+            ));
+        }
+    }
 
     public function renderCardForm(HookRenderEvent $event)
     {

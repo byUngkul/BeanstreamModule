@@ -1,3 +1,5 @@
 config:
   merchant_id: text
   passcode: text
+  min_amount: number
+  max_amount: number

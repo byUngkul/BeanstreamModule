@@ -6,6 +6,7 @@
 
 namespace BeanstreamModule;
 
+use BeanstreamModule\Model\Config\BeanstreamModuleConfigValue;
 use Thelia\Model\Order;
 use Thelia\Module\AbstractPaymentModule;
 use Thelia\Module\BaseModule;
@@ -22,8 +23,14 @@ class BeanstreamModule extends AbstractPaymentModule
     const ROUTER = "router.beanstreammodule";
 
     const BASE_URL = "https://www.beanstream.com/api/v1";
-
     const BEANSTREAM_ORDER_ID = 'beanstream.order.id';
+
+    public function postActivation(ConnectionInterface $con = null)
+    {
+        $database = new Database($con);
+
+        $database->insertSql(null, [__DIR__ . "/Config/create.sql", __DIR__ . "/Config/insert.sql"]);
+    }
 
     /**
      *
@@ -59,7 +66,7 @@ class BeanstreamModule extends AbstractPaymentModule
      */
     public function isValidPayment()
     {
-        return $this->isDevEnvironment() || $this->isSslEnabled();
+        return ($this->isDevEnvironment() || $this->isSslEnabled()) && $this->isValidAmount();
     }
 
     /**
@@ -67,7 +74,7 @@ class BeanstreamModule extends AbstractPaymentModule
      *
      * @return bool
      */
-    private function isDevEnvironment()
+    protected function isDevEnvironment()
     {
         return 'dev' == $this->getContainer()->getParameter('kernel.environment');
     }
@@ -77,8 +84,36 @@ class BeanstreamModule extends AbstractPaymentModule
      *
      * @return bool
      */
-    private function isSslEnabled()
+    protected function isSslEnabled()
     {
         return $this->getRequest()->isSecure();
+    }
+
+    protected function isValidAmount()
+    {
+        $minAmount = self::getConfigValue(BeanstreamModuleConfigValue::MIN_AMOUNT);
+        $maxAmount = self::getConfigValue(BeanstreamModuleConfigValue::MAX_AMOUNT);
+
+        $amount = $this->getOrdertotalAmount();
+
+        return $amount >= $minAmount && $amount <= $maxAmount;
+    }
+
+    /**
+     * calculate the total order amount
+     *
+     * @return float|int
+     */
+    protected function getOrdertotalAmount()
+    {
+        $session = $this->getRequest()->getSession();
+        $order =  $session->getOrder();
+        $cart = $session->getSessionCart($this->getContainer()->get('event_dispatcher'));
+
+        $total = $cart->getTaxedAmount($this->getContainer()->get('thelia.taxEngine')->getDeliveryCountry());
+
+        $total += $order->getPostage();
+
+        return $total;
     }
 }

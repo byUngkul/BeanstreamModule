@@ -4,6 +4,7 @@
     <!-- sample definition
         <loop name="MySuperLoop" class="BeanstreamModule\Loop\MySuperLoop" />
         -->
+    <loop name="beanstream-payment" class="BeanstreamModule\Loop\BeanstreamPayment"/>
   </loops>
   <forms>
     <!--
@@ -11,6 +12,8 @@
         -->
     <form name="beanstreammodule.configuration" class="BeanstreamModule\Form\BeanstreamModuleConfigForm"/>
     <form name="beanstreammodule.payment" class="BeanstreamModule\Form\PaymentForm"/>
+    <form name="beanstream_payment.create" class="BeanstreamModule\Form\BeanstreamPaymentCreateForm"/>
+    <form name="beanstream_payment.update" class="BeanstreamModule\Form\BeanstreamPaymentUpdateForm"/>
   </forms>
   <commands>
     <!--
@@ -22,11 +25,12 @@
 
     </services>
     -->
-    <hooks>
-        <hook id="beanstreammodule.hook" class="BeanstreamModule\Hook\PaymentHook" scope="request">
-            <tag name="hook.event_listener" event="order-payment-gateway.body" method="renderCardForm" />
-        </hook>
-    </hooks>
+  <hooks>
+    <hook id="beanstreammodule.hook" class="BeanstreamModule\Hook\PaymentHook" scope="request">
+      <tag name="hook.event_listener" event="order-payment-gateway.body" method="renderCardForm"/>
+      <tag name="hook.event_listener" event="order-edit.cart-bottom" method="showPaymentInfo" type="back"/>
+    </hook>
+  </hooks>
   <!--
     <exports>
 
@@ -37,4 +41,13 @@
 
     </imports>
     -->
+  <services>
+    <service id="beanstreammodule.form.type.beanstream_payment_id" class="BeanstreamModule\Form\Type\BeanstreamPaymentIdType">
+      <argument id="thelia.translator" type="service"/>
+      <tag name="thelia.form.type"/>
+    </service>
+    <service id="action.beanstreammodule.beanstream_payment_table" class="BeanstreamModule\Action\BeanstreamPaymentAction">
+      <tag name="kernel.event_subscriber"/>
+    </service>
+  </services>
 </config>

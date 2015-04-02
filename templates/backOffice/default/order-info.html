@@ -1,0 +1,19 @@
+{loop name="beanstream" type="beanstream-payment" order_id=$order_id}
+<div class="table-responsive">
+    <table class="table table-striped table-condensed table-left-aligned">
+        <caption class="clearfix">
+            {intl l='Beanstream information' d="beanstreammodule"}
+        </caption>
+        <tbody>
+        <tr>
+            <th>{intl l='Error code' d="beanstreammodule"}</th>
+            <td>{$MESSAGE_ID}</td>
+        </tr>
+        <tr>
+            <th>{intl l='Error message' d="beanstreammodule"}</th>
+            <td>{$MESSAGE}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+{/loop}

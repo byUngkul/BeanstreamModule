@@ -6,13 +6,12 @@
 
 namespace BeanstreamModule\Event;
 
-use BeanstreamModule\Event\Base\BeanstreamModuleEvents as BaseBeanstreamModuleEvents;
+use BeanstreamModule\Event\Base\BeanstreamPaymentEvents as BaseBeanstreamPaymentEvents;
 
 /**
- * Class BeanstreamModuleEvents
+ * Class BeanstreamPaymentEvents
  * @package BeanstreamModule\Event
- * @author TheliaStudio
  */
-class BeanstreamModuleEvents extends BaseBeanstreamModuleEvents
+class BeanstreamPaymentEvents extends BaseBeanstreamPaymentEvents
 {
 }

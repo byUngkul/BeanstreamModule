@@ -20,5 +20,7 @@ class BeanstreamModuleConfigValue
 {
     const MERCHANT_ID = "merchant_id";
     const PASSCODE = "passcode";
+    const MIN_AMOUNT = "min_amount";
+    const MAX_AMOUNT = "max_amount";
 }
 
