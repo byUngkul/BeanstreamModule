@@ -3,6 +3,14 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://thelia.net/schema/dic/module http://thelia.net/schema/dic/module/module-2_1.xsd">
     <fullnamespace>BeanstreamModule\BeanstreamModule</fullnamespace>
+    <descriptive locale="fr_FR">
+        <title>Moyen de paiement Beanstream</title>
+        <!--
+        <subtitle></subtitle>
+        <description></description>
+        <postscriptum></postscriptum>
+        -->
+    </descriptive>
     <descriptive locale="en_US">
         <title>Beanstream payment gateway</title>
         <!--
@@ -14,6 +22,7 @@
     <!-- <logo></logo> -->
     <languages>
         <language>en_US</language>
+        <language>fr_FR</language>
     </languages>
     <version>0.1</version>
     <author>
