@@ -27,9 +27,18 @@ class BeanstreamModule extends AbstractPaymentModule
 
     public function postActivation(ConnectionInterface $con = null)
     {
-        $database = new Database($con);
+        if (!self::getConfigValue('is_initialized', false)) {
+            $database = new Database($con);
 
-        $database->insertSql(null, [__DIR__ . "/Config/create.sql", __DIR__ . "/Config/insert.sql"]);
+            $database->insertSql(null, [__DIR__ . "/Config/create.sql", __DIR__ . "/Config/insert.sql"]);
+        }
+
+        /* insert the images from image folder if not already done */
+        $moduleModel = $this->getModuleModel();
+
+        if (! $moduleModel->isModuleImageDeployed($con)) {
+            $this->deployImageFolder($moduleModel, sprintf('%s/images', __DIR__), $con);
+        }
     }
 
     /**
