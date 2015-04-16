@@ -31,6 +31,7 @@ class BeanstreamModule extends AbstractPaymentModule
             $database = new Database($con);
 
             $database->insertSql(null, [__DIR__ . "/Config/create.sql", __DIR__ . "/Config/insert.sql"]);
+            self::setConfigValue('is_initialized', true);
         }
 
         /* insert the images from image folder if not already done */
